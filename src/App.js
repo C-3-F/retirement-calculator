@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import RetirementForm from "./Components/RetirementForm";
 import { Container } from "react-bootstrap";
 
@@ -15,12 +15,13 @@ function App() {
 
   // const [retirementFundAmount, setRetirementFundAmount] = useState();
 
-  const handleFormChanges = useMemo(() => {
+  useEffect(() => {
 
     
     const projectedRetirmentFundAmount = savingsAmount * (1 + rateOfReturn / 100) ** (retirementAge - currentAge);
 
     const projectedRetirementIncome = projectedRetirmentFundAmount * (annualWithdrawal / 100);
+    console.log(projectedRetirementIncome);
 
 
 
@@ -34,6 +35,8 @@ function App() {
     savingsPercentage,
     rateOfReturn,
     inflationRate,
+    annualWithdrawal,
+    savingsAmount
   ]);
 
   return (
