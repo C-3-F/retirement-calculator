@@ -12,22 +12,22 @@ import FormRange from "react-bootstrap/esm/FormRange";
 const RetirementForm = ({
   onCurrentAgeChange,
   onRetirementAgeChange,
+  onSustainabilityAgeChange,
   onCurrentIncomeChange,
   onNeededIncomeChange,
   onSavingsPercentageChange,
   onSavingsAmountChange,
   onRateOfReturnChange,
   onInflationRateChange,
-  onAnnualWithdrawalChange,
   currentAge,
   retirementAge,
+  sustainabilityAge,
   currentIncome,
   neededIncome,
   savingsPercentage,
   savingsAmount,
   rateOfReturn,
   inflationRate,
-  annualWithdrawal,
 }) => {
   const formatNumberWithCommas = (number) => {
     if (number === 0 || number === undefined) {
@@ -40,13 +40,13 @@ const RetirementForm = ({
     if (/^[\d,]*$/.test(number)) {
       return number.replace(/,/g, "");
     } else {
-      return number.replace(/[^\d]/g,"");
+      return number.replace(/[^\d]/g, "");
     }
   };
 
   return (
     <Form className="">
-      <FormGroup controlId="formAges" className="mb-4">
+      <FormGroup controlId="formAge" className="mb-4">
         <Form.Label>Current Age</Form.Label>
         <Form.Control
           type="number"
@@ -63,6 +63,16 @@ const RetirementForm = ({
           placeholder="Enter age"
           onChange={(e) => onRetirementAgeChange(e.target.value)}
           value={retirementAge}
+        />
+      </FormGroup>
+
+      <FormGroup controlId="formSustainabilityAge" className="mb-4">
+        <Form.Label>Projected Age for Income Sustainability: </Form.Label>
+        <Form.Control
+          type="number"
+          placeholder="Enter age"
+          onChange={(e) => onSustainabilityAgeChange(e.target.value)}
+          value={sustainabilityAge}
         />
       </FormGroup>
 
@@ -109,7 +119,7 @@ const RetirementForm = ({
           <Col style={{ display: "flex", alignItems: "center" }}>
             <FormRange
               onChange={(e) => onSavingsPercentageChange(e.target.value)}
-              step={0.1}
+              step={0.01}
               value={savingsPercentage}
             />
           </Col>
@@ -132,11 +142,11 @@ const RetirementForm = ({
         <InputGroup>
           <span className="input-group-text">$</span>
           <Form.Control
-            type="number"
+            type="text"
             placeholder="Enter amount"
             step={1000}
-            onChange={(e) => onSavingsAmountChange(e.target.value)}
-            value={savingsAmount}
+            onChange={(e) => onSavingsAmountChange(Number(removeCommas(e.target.value)))}
+            value={formatNumberWithCommas(savingsAmount)}
           />
         </InputGroup>
       </FormGroup>
@@ -148,7 +158,7 @@ const RetirementForm = ({
             <FormRange
               onChange={(e) => onRateOfReturnChange(e.target.value)}
               value={rateOfReturn}
-              step={0.1}
+              step={0.01}
             />
           </Col>
           <Col md={2}>
@@ -163,11 +173,17 @@ const RetirementForm = ({
             </InputGroup>
           </Col>
         </Row>
-        <FormText>
-          A balanced portfolio of stocks and bonds has historically averaged a
-          rate of return of about 7%. We have chosen that for the default but
-          you are welcome to adjust it.
-        </FormText>
+        <Row>
+          <Col md={10}>
+            <FormText>
+              A balanced fund of stocks and bonds has historically averaged
+              about 7%. To account for taxes, we apply a 25% total income tax
+              rate (20% Long-Term Capital gain rate + 5% State Income Tax),
+              resulting in an effective after-tax rate of 5.25%. We have chosen
+              that for the default but you are welcome to adjust it.
+            </FormText>
+          </Col>
+        </Row>
       </FormGroup>
 
       <FormGroup controlId="formInflation" className="mb-4">
@@ -180,7 +196,7 @@ const RetirementForm = ({
               onChange={(e) => onInflationRateChange(e.target.value)}
               value={inflationRate}
               max={10}
-              step={0.1}
+              step={0.01}
             />
           </Col>
           <Col md={2}>
@@ -198,38 +214,6 @@ const RetirementForm = ({
         <FormText className="text-center">
           Inflation has averaged about 2% per year over the last 20 years. We
           have chosen that for the default but you are welcome to adjust it.
-        </FormText>
-      </FormGroup>
-      <FormGroup controlId="formAnnualWithdrawal" className="mb-4">
-        <Form.Label>
-          Annual withdrawal rate (percentage of retirement savings withdrawn
-          each year)
-        </Form.Label>
-        <Row>
-          <Col style={{ display: "flex", alignItems: "center" }}>
-            <Form.Range
-              onChange={(e) => onAnnualWithdrawalChange(e.target.value)}
-              value={annualWithdrawal}
-              max={10}
-              step={0.1}
-            />
-          </Col>
-          <Col md={2}>
-            <InputGroup>
-              <Form.Control
-                type="number"
-                placeholder="Enter rate"
-                onChange={(e) => onAnnualWithdrawalChange(e.target.value)}
-                value={annualWithdrawal}
-              />
-              <span className="input-group-text">%</span>
-            </InputGroup>
-          </Col>
-        </Row>
-        <FormText className="text-center">
-          Annual withdrawal rate typically follow's the WQilliam Bengen rule of
-          4%. We have chosen that for the default but you are welcom e to adjust
-          it.
         </FormText>
       </FormGroup>
     </Form>
