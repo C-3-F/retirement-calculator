@@ -54,6 +54,7 @@ function App() {
   }, [
     currentAge,
     retirementAge,
+    sustainabilityAge,
     currentIncome,
     neededIncome,
     savingsPercentage,
